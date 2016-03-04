@@ -1,0 +1,21 @@
+{
+  "name": "multi-duplex-stream",
+  "version": "0.0.0",
+  "description": "Duplex stream that reads/writes from/to multiple stream in at once",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "dependencies": {
+    "duplexify": "^3.4.3",
+    "multi-read-stream": "^2.0.0",
+    "multi-write-stream": "^2.0.1"
+  },
+  "devDependencies": {
+    "concat-stream": "^1.5.1",
+    "from2": "^2.1.1",
+    "tape": "^4.5.0",
+    "through2": "^2.0.1"
+  },
+  "author": "Emil Bay <github@tixz.dk>",
+  "license": "MIT"
+}
