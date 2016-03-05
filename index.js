@@ -3,7 +3,11 @@
 var WriteStream = require('multi-write-stream')
 var ReadStream = require('multi-read-stream')
 var Duplexify = require('duplexify')
+var inherits = require('inherits')
 
+var miss = require('mississippi')
+
+inherits(MultiDuplex, Duplexify)
 function MultiDuplex (streams, opts) {
   if (!(this instanceof MultiDuplex)) return new MultiDuplex(streams, opts)
   if (!streams) streams = []
@@ -15,38 +19,25 @@ function MultiDuplex (streams, opts) {
 
   if (!opts) opts = {}
 
-  this._write = new WriteStream(streams, opts)
-  this._read = new ReadStream(streams, opts)
+  this._multiWrite = new WriteStream(streams, opts)
+  this._multiRead = new ReadStream(streams, opts)
+
+  Duplexify.call(this, this._multiWrite, this._multiRead, opts)
 
   this.streams = streams
-  this.destroyed = false
-
-  return new Duplexify(this._write, this._read, opts)
 }
 
 MultiDuplex.prototype.add = function (stream) {
-  this._write.add(stream)
-  this._read.add(stream)
+  this._multiWrite.add(stream)
+  this._multiRead.add(stream)
 }
 MultiDuplex.prototype.remove = function (stream) {
-  this._write.remove(stream)
-  this._read.remove(stream)
-}
-
-MultiDuplex.prototype.destroy = function (err) {
-  if (this.destroyed) return
-
-  this.destroyed = true
-  this._write.destroy(err)
-  this._read.destroy(err)
-}
-
-MultiDuplex.prototype.end = function (data, enc, cb) {
-  return this._write.end(data, enc, cb)
+  this._multiWrite.add(stream)
+  this._multiRead.add(stream)
 }
 
 MultiDuplex.prototype.finalize = function () {
-  this._read.finalize()
+  this._multiRead.finalize()
 }
 
 MultiDuplex.obj = function (streams, opts) {
