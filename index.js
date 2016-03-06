@@ -19,12 +19,11 @@ function MultiDuplex (streams, opts) {
 
   if (!opts) opts = {}
 
-  this._multiWrite = new WriteStream(streams, opts)
-  this._multiRead = new ReadStream(streams, opts)
+  this.streams = streams
+  this._multiWrite = new WriteStream(this.streams.slice(), opts)
+  this._multiRead = new ReadStream(this.streams.slice(), opts)
 
   Duplexify.call(this, this._multiWrite, this._multiRead, opts)
-
-  this.streams = streams
 }
 
 MultiDuplex.prototype.add = function (stream) {
@@ -32,8 +31,12 @@ MultiDuplex.prototype.add = function (stream) {
   this._multiRead.add(stream)
 }
 MultiDuplex.prototype.remove = function (stream) {
-  this._multiWrite.add(stream)
-  this._multiRead.add(stream)
+  var i = this.streams.indexOf(stream)
+  if (i === -1) return
+  this.streams.splice(i, 1)
+
+  this._multiWrite.remove(stream)
+  this._multiRead.remove(stream)
 }
 
 MultiDuplex.prototype.finalize = function () {
