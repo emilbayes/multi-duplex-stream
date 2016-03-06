@@ -5,8 +5,6 @@ var ReadStream = require('multi-read-stream')
 var Duplexify = require('duplexify')
 var inherits = require('inherits')
 
-var miss = require('mississippi')
-
 inherits(MultiDuplex, Duplexify)
 function MultiDuplex (streams, opts) {
   if (!(this instanceof MultiDuplex)) return new MultiDuplex(streams, opts)
