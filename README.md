@@ -1,7 +1,7 @@
 `multi-duplex-stream`
 =====================
 
-Duplex stream that reads/writes from/to multiple stream in at once
+Duplex stream that reads/writes from/to multiple duplex streams at once
 
 Installation
 ------------
@@ -53,8 +53,6 @@ Documentation
 #### `.destroy([err])`
 
 #### `.destroyed`
-
-#### `.end([data], [enc, cb])`
 
 #### `.finalize()`
 
